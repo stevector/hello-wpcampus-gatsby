@@ -40,32 +40,33 @@ const IndexPage = () => {
   return (
     <Layout>
       <SEO title="Home" />
-      <h1>Pantheon</h1>
-      { data.wordpress.posts.nodes && data.wordpress.posts.nodes.map( post => (
-        <>
-          <Link to={post.slug}>
-            <h3>{post.title}</h3>
-          </Link>
-          { post.featuredImage &&
-            <div>
-              <Link to={post.slug}>
-                <Img
-                  fluid={post.featuredImage.gatsbyImageFile.childImageSharp.fluid}
-                  alt="Gatsby Docs are awesome"
-                />
-              </Link>
-            </div>
-          }
-          <br />
-          <div dangerouslySetInnerHTML={{__html:post.excerpt}}></div>
-          <Link to={post.slug}>
-            Read more
-          </Link>
-          <hr />
-        </>
-      ))}
+      <h1>Latest posts</h1>
+      {data.wordpress.posts.nodes &&
+        data.wordpress.posts.nodes.map(post => (
+          <>
+            <Link to={post.slug}>
+              <h3>{post.title}</h3>
+            </Link>
+            {post.featuredImage && (
+              <div>
+                <Link to={post.slug}>
+                  <Img
+                    fluid={
+                      post.featuredImage.gatsbyImageFile.childImageSharp.fluid
+                    }
+                    alt="Gatsby Docs are awesome"
+                  />
+                </Link>
+              </div>
+            )}
+            <br />
+            <div dangerouslySetInnerHTML={{ __html: post.excerpt }}></div>
+            <Link to={post.slug}>Read more</Link>
+            <hr />
+          </>
+        ))}
     </Layout>
-  );
+  )
 }
 
 export default IndexPage
