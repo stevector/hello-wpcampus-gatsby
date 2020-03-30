@@ -31,6 +31,7 @@ steps:
     entrypoint: yarn 
     args: ['build']
     env:
+    - WORDPRESS_GRAPHQL=$WORDPRESS_GRAPHQL
     - CI=true
 
   # - name: 'gcr.io/$PROJECT_ID/save_cache'
