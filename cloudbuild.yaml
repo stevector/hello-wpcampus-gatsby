@@ -18,7 +18,7 @@ steps:
   - name: 'gcr.io/$PROJECT_ID/restore_cache'
     args:
     - '--bucket=gs://$_CACHE_BUCKET'
-    - '--key=build-output-$_TERMINUS_SITE'
+    - '--key=$_TERMINUS_SITE-build-output'
 
   - name: 'node:10-jessie-slim'
     entrypoint: yarn 
@@ -30,9 +30,9 @@ steps:
   - name: 'gcr.io/$PROJECT_ID/save_cache'
     args:
     - '--bucket=gs://$_CACHE_BUCKET'
-    - '--key=build-output-$_TERMINUS_SITE'
+    - '--key=$_TERMINUS_SITE-build-output'
     - '--path=public'
     - '--path=.cache'
   
   - name: 'gcr.io/cloud-builders/gsutil'
-    args: ['-m', '-h', 'Cache-Control:public, s-maxage=15, stale-while-revalidate=300', '-h', 'Content-Disposition', 'rsync', '-r', './public', 'gs://static.pantheonfrontend.website/hello-wpcampus-gatsby/gcp']
+    args: ['-m', '-h', 'Cache-Control:public, s-maxage=15, stale-while-revalidate=300', '-h', 'Content-Disposition', 'rsync', '-r', './public', 'gs://static.pantheonfrontend.website/hello-wpcampus-gatsby/live']
