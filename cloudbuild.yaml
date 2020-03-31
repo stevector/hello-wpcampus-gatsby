@@ -2,37 +2,32 @@ steps:
   # - name: 'gcr.io/$PROJECT_ID/restore_cache'
   #   args:
   #   - '--bucket=gs://$_CACHE_BUCKET'
+  #   - '--source='
   #   - '--key=resources-$(checksum yarn.lock)'
     
   - name: 'node:10-jessie-slim'
     entrypoint: yarn
-    args: ['install']
+    args: ['install', '--frozen-lockfile']
 
-  # - name: 'gcr.io/$PROJECT_ID/save_cache'
-  #   args:
-  #   - '--bucket=gs://$_CACHE_BUCKET'
-  #   - '--key=resources-$(checksum yarn.lock)'
-  #   - '--path=node_modules'
-  #   - '--path=packages/gatsby-theme-pantheon-core/node_modules'
-  #   - '--path=packages/gatsby-theme-pantheon-drupal/node_modules'
-  #   - '--path=packages/gatsby-theme-pantheon-wordpress/node_modules'
-  #   - '--path=gatsby-drupal/node_modules'
-  #   - '--path=gatsby-drupal-dark/node_modules'
-  #   - '--path=gatsby-drupal-shadowing/node_modules'
-  #   - '--path=gatsby-wordpress/node_modules'
-  #   - '--no-clobber'
+  - name: 'gcr.io/$PROJECT_ID/save_cache'
+    args:
+    - '--bucket=gs://$_CACHE_BUCKET'
+    - '--out=hello-wpcampus-gatsby'
+    - '--key=resources-$(checksum yarn.lock)'
+    - '--path=node_modules'
+    - '--no-clobber'
   
   # - name: 'gcr.io/$PROJECT_ID/restore_cache'
   #   args:
   #   - '--bucket=gs://$_CACHE_BUCKET'
   #   - '--key=resources-$_PATH'
 
-  - name: 'node:10-jessie-slim'
-    entrypoint: yarn 
-    args: ['build']
-    env:
-    - WORDPRESS_GRAPHQL=$_WORDPRESS_GRAPHQL
-    - CI=true
+  # - name: 'node:10-jessie-slim'
+  #   entrypoint: yarn 
+  #   args: ['build']
+  #   env:
+  #   - WORDPRESS_GRAPHQL=$_WORDPRESS_GRAPHQL
+  #   - CI=true
 
   # - name: 'gcr.io/$PROJECT_ID/save_cache'
   #   args:
@@ -42,7 +37,5 @@ steps:
   #   - '--path=$_PATH/.cache'
   
   
-  - name: 'gcr.io/cloud-builders/gsutil'
-    args: ['-m', '-h', 'Cache-Control:public, s-maxage=15, stale-while-revalidate=300', '-h', 'Content-Disposition', 'rsync', '-r', './public', 'gs://static.pantheonfrontend.website/hello-wpcampus-gatsby/gcp']
-    # -m setmeta -r -h "Cache-Control:public, s-maxage=15, stale-while-revalidate=300" -h "Content-Disposition"
-  # gsutil -m -h "Cache-Control:private, max-age=0, no-transform" rsync -r ./dir gs://my-bucket
+  # - name: 'gcr.io/cloud-builders/gsutil'
+  #   args: ['-m', '-h', 'Cache-Control:public, s-maxage=15, stale-while-revalidate=300', '-h', 'Content-Disposition', 'rsync', '-r', './public', 'gs://static.pantheonfrontend.website/hello-wpcampus-gatsby/gcp']
