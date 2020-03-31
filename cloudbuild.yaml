@@ -11,8 +11,7 @@ steps:
 
   - name: 'gcr.io/$PROJECT_ID/save_cache'
     args:
-    - '--bucket=gs://$_CACHE_BUCKET'
-    - '--out=hello-wpcampus-gatsby'
+    - '--bucket=gs://$_CACHE_BUCKET/hello-wpcampus-gatsby'
     - '--key=resources-$(checksum yarn.lock)'
     - '--path=node_modules'
     - '--no-clobber'
