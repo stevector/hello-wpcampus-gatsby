@@ -1,9 +1,8 @@
 steps:
-  # - name: 'gcr.io/$PROJECT_ID/restore_cache'
-  #   args:
-  #   - '--bucket=gs://$_CACHE_BUCKET'
-  #   - '--source='
-  #   - '--key=resources-$(checksum yarn.lock)'
+  - name: 'gcr.io/$PROJECT_ID/restore_cache'
+    args:
+    - '--bucket=gs://$_CACHE_BUCKET'
+    - '--key=$_TERMINUS_SITE-dependencies-$(checksum yarn.lock)'
     
   - name: 'node:10-jessie-slim'
     entrypoint: yarn
@@ -11,30 +10,29 @@ steps:
 
   - name: 'gcr.io/$PROJECT_ID/save_cache'
     args:
-    - '--bucket=gs://$_CACHE_BUCKET/hello-wpcampus-gatsby'
-    - '--key=resources-$(checksum yarn.lock)'
+    - '--bucket=gs://$_CACHE_BUCKET'
+    - '--key=$_TERMINUS_SITE-dependencies-$(checksum yarn.lock)'
     - '--path=node_modules'
     - '--no-clobber'
   
-  # - name: 'gcr.io/$PROJECT_ID/restore_cache'
-  #   args:
-  #   - '--bucket=gs://$_CACHE_BUCKET'
-  #   - '--key=resources-$_PATH'
+  - name: 'gcr.io/$PROJECT_ID/restore_cache'
+    args:
+    - '--bucket=gs://$_CACHE_BUCKET'
+    - '--key=build-output-$_TERMINUS_SITE'
 
-  # - name: 'node:10-jessie-slim'
-  #   entrypoint: yarn 
-  #   args: ['build']
-  #   env:
-  #   - WORDPRESS_GRAPHQL=$_WORDPRESS_GRAPHQL
-  #   - CI=true
+  - name: 'node:10-jessie-slim'
+    entrypoint: yarn 
+    args: ['build']
+    env:
+    - WORDPRESS_GRAPHQL=$_WORDPRESS_GRAPHQL
+    - CI=true
 
-  # - name: 'gcr.io/$PROJECT_ID/save_cache'
-  #   args:
-  #   - '--bucket=gs://$_CACHE_BUCKET'
-  #   - '--key=resources-$_PATH'
-  #   - '--path=$_PATH/public'
-  #   - '--path=$_PATH/.cache'
+  - name: 'gcr.io/$PROJECT_ID/save_cache'
+    args:
+    - '--bucket=gs://$_CACHE_BUCKET'
+    - '--key=build-output-$_TERMINUS_SITE'
+    - '--path=public'
+    - '--path=.cache'
   
-  
-  # - name: 'gcr.io/cloud-builders/gsutil'
-  #   args: ['-m', '-h', 'Cache-Control:public, s-maxage=15, stale-while-revalidate=300', '-h', 'Content-Disposition', 'rsync', '-r', './public', 'gs://static.pantheonfrontend.website/hello-wpcampus-gatsby/gcp']
+  - name: 'gcr.io/cloud-builders/gsutil'
+    args: ['-m', '-h', 'Cache-Control:public, s-maxage=15, stale-while-revalidate=300', '-h', 'Content-Disposition', 'rsync', '-r', './public', 'gs://static.pantheonfrontend.website/hello-wpcampus-gatsby/gcp']
