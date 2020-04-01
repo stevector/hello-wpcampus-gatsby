@@ -10,5 +10,4 @@ workflows:
               ignore: "master"
 
 orbs:
-  pfe: stevector/pantheon-frontend@0.0.2
-  # pfe: stevector/pantheon-frontend@dev:header-in-sync
+  pfe: stevector/pantheon-frontend@0.1.0
